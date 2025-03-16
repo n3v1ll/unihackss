@@ -1,0 +1,22 @@
+import os
+
+output_file = "combined_code.txt"
+with open(output_file, "w", encoding="utf-8") as outfile:
+    for root, dirs, files in os.walk("."):
+        # Skip directories like .git or node_modules if needed
+        if ".git" in dirs:
+            dirs.remove(".git")
+        if "node_modules" in dirs:
+            dirs.remove("node_modules")
+        
+        for file in files:
+            # Optionally filter file types (e.g., only .py, .js, etc.)
+            if file.endswith((".py", ".js", ".cpp", ".c", ".css", ".html")):
+                file_path = os.path.join(root, file)
+                outfile.write(f"\n\n# --- Begin: {file_path} ---\n")
+                try:
+                    with open(file_path, "r", encoding="utf-8") as infile:
+                        outfile.write(infile.read())
+                except Exception as e:
+                    outfile.write(f"# Could not read {file_path}: {e}\n")
+                outfile.write(f"\n# --- End: {file_path} ---\n")
